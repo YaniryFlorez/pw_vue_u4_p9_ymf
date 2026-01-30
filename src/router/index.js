@@ -1,12 +1,38 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import CrearEstudiante from '@/components/CrearEstudiante.vue'
+import MostrarTodos from '@/components/MostrarTodos.vue'
+import BuscarEstudiante from '@/components/BuscarEstudiante.vue'
+import aboutComponent from '@/components/aboutComponent.vue'
+import ActualizarEstudiante from '@/components/ActualizarEstudiante.vue'
 
 const routes = [
   {
-    path: '/',
-    name: 'home',
-    component: HomeView
+    path: '/crear',
+    name: 'crear',
+    component: CrearEstudiante
   },
+  {
+    path: '/mostrar',
+    name: 'mostrar',
+    component: () => MostrarTodos
+  },
+  {
+    path: '/buscar',
+    name: 'buscar',
+    component: BuscarEstudiante
+  },
+  {
+    path: '/componente',
+    name: 'componente',
+    component: aboutComponent
+  },
+
+  {
+    path: '/actualizar/estudiante/:id',
+    name: 'ActualizarEstudiante',
+    component: () => ActualizarEstudiante
+  },
+
   {
     path: '/about',
     name: 'about',
