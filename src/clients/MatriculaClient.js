@@ -3,11 +3,14 @@ import crearToken from "@/clients/AuthClient";
 
 const getAuthHeaders = async () => {
     const token = await crearToken();
-    return { headers: { Authorization: `Bearer ${token}` } };
+
+    console.log("token llego " ,token.accessToken);
+    return { headers: { Authorization: `Bearer ${token.accessToken}` } };
 };
 
 // CRUD
 const consultarTodos = async () => {
+    
     const headers = await getAuthHeaders();
     const res = await axios.get('http://localhost:8081/matricula/api/v1.0/estudiantes', headers).then(r => r.data);
     return res;
