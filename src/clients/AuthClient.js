@@ -7,7 +7,11 @@ const crearToken = async () => {
   console.log("token auth ",resp);
   return resp;
 };
+//fachada 
+export const crearTokenFachada = async() =>{
+  return await crearToken();
+}
 
-export default crearToken;
+
 
 

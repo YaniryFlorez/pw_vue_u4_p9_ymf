@@ -1,8 +1,8 @@
 import axios from "axios";
-import crearToken from "@/clients/AuthClient";
+import {crearTokenFachada} from "@/clients/AuthClient";
 
 const getAuthHeaders = async () => {
-    const token = await crearToken();
+    const token = await crearTokenFachada();
 
     console.log("token llego " ,token.accessToken);
     return { headers: { Authorization: `Bearer ${token.accessToken}` } };
