@@ -43,6 +43,7 @@ export default {
     async buscar() {
       try {
         const respuesta = await mostrarPorIdFachada(this.idBuscar);
+        
         if (respuesta) {
           this.estudiantes = [respuesta];
         } else {

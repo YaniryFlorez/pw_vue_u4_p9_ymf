@@ -1,36 +1,45 @@
 import axios from "axios";
+import crearToken from "@/clients/AuthClient";
+
+const getAuthHeaders = async () => {
+    const token = await crearToken();
+    return { headers: { Authorization: `Bearer ${token}` } };
+};
 
 // CRUD
 const consultarTodos = async () => {
-    const res = await axios.get('http://localhost:8081/matricula/api/v1.0/estudiantes').then(r => r.data);
+    const headers = await getAuthHeaders();
+    const res = await axios.get('http://localhost:8081/matricula/api/v1.0/estudiantes', headers).then(r => r.data);
     return res;
 };
 
 const consultarPorId = async (id) => {
-    const res = await axios.get(`http://localhost:8081/matricula/api/v1.0/estudiantes/${id}`).then(r => r.data);
+    const headers = await getAuthHeaders();
+    const res = await axios.get(`http://localhost:8081/matricula/api/v1.0/estudiantes/${id}`, headers).then(r => r.data);
     return res;
 };
 
 const guardar = async (body) => {
-    const res = await axios.post("http://localhost:8081/matricula/api/v1.0/estudiantes", body).then(r => r.data);
-    console.log(res.data);
+    const headers = await getAuthHeaders();
+    const res = await axios.post("http://localhost:8081/matricula/api/v1.0/estudiantes", body, headers).then(r => r.data);
     return res;
 };
 
 const actualizar = async (id, body) => {
-    const res = await axios.put(`http://localhost:8081/matricula/api/v1.0/estudiantes/${id}`, body).then(r => r.data);
-    console.log(res);
+    const headers = await getAuthHeaders();
+    const res = await axios.put(`http://localhost:8081/matricula/api/v1.0/estudiantes/${id}`, body, headers).then(r => r.data);
     return res;
 };
 
 const actualizarParcial = async (id, body) => {
-    const res = await axios.patch(`http://localhost:8081/matricula/api/v1.0/estudiantes/${id}`, body).then(r => r.data);
-    console.log(res.data);
+    const headers = await getAuthHeaders();
+    const res = await axios.patch(`http://localhost:8081/matricula/api/v1.0/estudiantes/${id}`, body, headers).then(r => r.data);
     return res;
 };
 
 const borrar = async (id) => {
-    await axios.delete(`http://localhost:8081/matricula/api/v1.0/estudiantes/${id}`).then(r => r.data);
+    const headers = await getAuthHeaders();
+    await axios.delete(`http://localhost:8081/matricula/api/v1.0/estudiantes/${id}`, headers).then(r => r.data);
 
 };
 

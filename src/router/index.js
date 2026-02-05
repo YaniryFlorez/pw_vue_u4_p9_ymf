@@ -28,7 +28,7 @@ const routes = [
   },
 
   {
-    path: '/actualizar/estudiante/:id',
+    path: '/actualizar/estudiante',
     name: 'ActualizarEstudiante',
     component: () => ActualizarEstudiante
   },
