@@ -9,17 +9,29 @@ const routes = [
   {
     path: '/crear',
     name: 'crear',
-    component: CrearEstudiante
+    component: CrearEstudiante,
+    meta: {
+      requiereautorizacion: true,
+      esPublica: false
+    }
   },
   {
     path: '/mostrar',
     name: 'mostrar',
-    component: () => MostrarTodos
+    component: () => MostrarTodos,
+     meta: {
+      requiereautorizacion: true,
+      esPublica: false
+    }
   },
   {
     path: '/buscar',
     name: 'buscar',
-    component: BuscarEstudiante
+    component: BuscarEstudiante,
+     meta: {
+      requiereautorizacion: false,
+      esPublica: true
+    }
   },
   {
     path: '/componente',
@@ -47,5 +59,16 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 })
+//configuracion del guardian
+router.beforeEach((to, from, next) => {
+  if(to.meta.requiereautorizacion){
+    //le envio a una pag de login
+    console.log("Redirigiendo a login");
+  }else{
+    //pasa sin validacion
+    console.log("Pase libre");
+    next();
+  }
+} )
 
 export default router
