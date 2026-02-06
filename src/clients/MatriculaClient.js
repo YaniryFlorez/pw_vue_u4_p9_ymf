@@ -1,72 +1,181 @@
 import axios from "axios";
-import {crearTokenFachada} from "@/clients/AuthClient";
+import { crearTokenFachada } from "@/clients/AuthClient";
+import router from "@/router"
 
-const getAuthHeaders = async () => {
-    const token = await crearTokenFachada();
+const BASE_URL = 'http://localhost:8081/matricula/api/v1.0/estudiantes';
 
-    console.log("token llego " ,token.accessToken);
-    return { headers: { Authorization: `Bearer ${token.accessToken}` } };
+const getAuthConfig = () => {
+    const token = sessionStorage.getItem('jwt_token');
+    // Si NO hay token...
+    if (!token) {
+        // 2. Redirigimos al usuario al Login
+        router.push({ name: 'login' });
+        // 3. Detenemos todo lanzando un error.
+        // Esto evita que axios intente hacer la petición sin token.
+        throw new Error("Usuario no autenticado. Redirigiendo...");
+    }
+    return {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    };
 };
 
-// CRUD
+// 2. Manejador central de errores (especialmente para Token Vencido - 401)
+const manejarError = (error) => {
+    if (error.response && error.response.status === 401) {
+        console.warn("Sesión expirada (401). Redirigiendo...");
+        localStorage.removeItem('jwt_token'); // Limpiamos basura
+        router.push({ name: 'login' });
+    }
+    // Relanzamos el error para que el componente Vue pueda mostrar alertas si es necesario
+    throw error;
+};
+// --- MÉTODOS CRUD (Lógica pura) ---
+
 const consultarTodos = async () => {
-    
-    const headers = await getAuthHeaders();
-    const res = await axios.get('http://localhost:8081/matricula/api/v1.0/estudiantes', headers).then(r => r.data);
-    return res;
+    try {
+        const config = getAuthConfig();
+        const response = await axios.get(BASE_URL, config);
+        return response.data;
+    } catch (error) {
+        manejarError(error);
+    }
 };
 
 const consultarPorId = async (id) => {
-    const headers = await getAuthHeaders();
-    const res = await axios.get(`http://localhost:8081/matricula/api/v1.0/estudiantes/${id}`, headers).then(r => r.data);
-    return res;
+
+    try {
+
+        const config = getAuthConfig();
+
+        const response = await axios.get(`${BASE_URL}/${id}`, config);
+
+        return response.data;
+
+    } catch (error) {
+
+        manejarError(error);
+
+    }
+
 };
 
 const guardar = async (body) => {
-    const headers = await getAuthHeaders();
-    const res = await axios.post("http://localhost:8081/matricula/api/v1.0/estudiantes", body, headers).then(r => r.data);
-    return res;
+
+    try {
+
+        const config = getAuthConfig();
+
+        // POST: URL, Body, Config
+
+        const response = await axios.post(BASE_URL, body, config);
+
+        return response.data;
+
+    } catch (error) {
+
+        manejarError(error);
+
+    }
+
 };
 
 const actualizar = async (id, body) => {
-    const headers = await getAuthHeaders();
-    const res = await axios.put(`http://localhost:8081/matricula/api/v1.0/estudiantes/${id}`, body, headers).then(r => r.data);
-    return res;
+
+    try {
+
+        const config = getAuthConfig();
+
+        // PUT: URL, Body, Config
+
+        const response = await axios.put(`${BASE_URL}/${id}`, body, config);
+
+        return response.data;
+
+    } catch (error) {
+
+        manejarError(error);
+
+    }
+
 };
 
 const actualizarParcial = async (id, body) => {
-    const headers = await getAuthHeaders();
-    const res = await axios.patch(`http://localhost:8081/matricula/api/v1.0/estudiantes/${id}`, body, headers).then(r => r.data);
-    return res;
+
+    try {
+
+        const config = getAuthConfig();
+
+        // PATCH: URL, Body, Config
+
+        const response = await axios.patch(`${BASE_URL}/${id}`, body, config);
+
+        return response.data;
+
+    } catch (error) {
+
+        manejarError(error);
+
+    }
+
 };
 
 const borrar = async (id) => {
-    const headers = await getAuthHeaders();
-    await axios.delete(`http://localhost:8081/matricula/api/v1.0/estudiantes/${id}`, headers).then(r => r.data);
+
+    try {
+
+        const config = getAuthConfig();
+
+        // DELETE: URL, Config
+
+        const response = await axios.delete(`${BASE_URL}/${id}`, config);
+
+        return response.data;
+
+    } catch (error) {
+
+        manejarError(error);
+
+    }
 
 };
 
-// Fachadas
+// --- FACHADAS (Para exportar a los componentes Vue) ---
+
 export const mostrarTodosFachada = async () => {
+
     return await consultarTodos();
+
 };
 
 export const mostrarPorIdFachada = async (id) => {
+
     return await consultarPorId(id);
+
 };
 
 export const guardarFachada = async (body) => {
+
     return await guardar(body);
+
 };
 
 export const actualizarFachada = async (id, body) => {
+
     return await actualizar(id, body);
+
 };
 
 export const actualizarParcialFachada = async (id, body) => {
+
     return await actualizarParcial(id, body);
+
 };
 
 export const borrarFachada = async (id) => {
-    await borrar(id);
+
+    return await borrar(id);
+
 };
+

@@ -5,12 +5,19 @@ import BuscarEstudiante from '@/components/BuscarEstudiante.vue'
 import aboutComponent from '@/components/aboutComponent.vue'
 import ActualizarEstudiante from '@/components/ActualizarEstudiante.vue'
 import loginView from '@/views/loginView.vue'
+import HomeView from '@/views/HomeView.vue'
 
 const routes = [
+   {path: '/',    
+     redirect: '/login' 
+    } ,
   {
     path: '/login',
     name: 'login',
     component: loginView,
+    meta:{
+      hideNavbar: true,
+    }
   },
   {
     path: '/crear',
@@ -35,7 +42,7 @@ const routes = [
     name: 'buscar',
     component: BuscarEstudiante,
      meta: {
-      requiereautorizacion: false,
+      requiereautorizacion: true,
       esPublica: true
     }
   },
@@ -69,7 +76,8 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   if(to.meta.requiereautorizacion){
     //le envio a una pag de login
-    const estaAutenticado = localStorage.getItem("estaAutenticado");
+    const estaAutenticado = sessionStorage.getItem("estaAutenticado");
+
     if(!estaAutenticado )
     {
     console.log("Redirigiendo a login");

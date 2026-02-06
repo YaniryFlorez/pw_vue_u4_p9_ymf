@@ -1,5 +1,4 @@
 <template>
-    <h2>loginView</h2>
   <login/>
 </template>
 
