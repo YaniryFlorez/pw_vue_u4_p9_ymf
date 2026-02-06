@@ -4,8 +4,14 @@ import MostrarTodos from '@/components/MostrarTodos.vue'
 import BuscarEstudiante from '@/components/BuscarEstudiante.vue'
 import aboutComponent from '@/components/aboutComponent.vue'
 import ActualizarEstudiante from '@/components/ActualizarEstudiante.vue'
+import loginView from '@/views/loginView.vue'
 
 const routes = [
+  {
+    path: '/login',
+    name: 'login',
+    component: loginView,
+  },
   {
     path: '/crear',
     name: 'crear',
@@ -63,7 +69,15 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   if(to.meta.requiereautorizacion){
     //le envio a una pag de login
+    const estaAutenticado = localStorage.getItem("estaAutenticado");
+    if(!estaAutenticado )
+    {
     console.log("Redirigiendo a login");
+    next({name: 'login'})
+    }else{
+      next();
+    }
+    
   }else{
     //pasa sin validacion
     console.log("Pase libre");

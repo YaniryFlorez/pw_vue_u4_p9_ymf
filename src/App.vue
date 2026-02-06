@@ -1,5 +1,6 @@
 <template>
   <nav>
+     
     <router-link to="/crear">Crear</router-link> |
     <router-link to="/mostrar">Mostrar</router-link> |
     <router-link to="/buscar">Buscar</router-link> |
